@@ -100,7 +100,7 @@ class Main_ui:
                     stopbits=serial.STOPBITS_ONE,
                     timeout=0.5,
                 )
-                self.timer_1.start(100)
+                self.timer_1.start(10)
             except serial.SerialException as e:
                 print(f"Failed to connect to serial port: {str(e)}")
         else:
@@ -131,7 +131,7 @@ class Main_ui:
                     stopbits=serial.STOPBITS_ONE,
                     timeout=0.5,
                 )
-                self.timer_2.start(100)
+                self.timer_2.start(10)
             except serial.SerialException as e:
                 print(f"Failed to connect to serial port: {str(e)}")
         else:
@@ -163,7 +163,7 @@ class Main_ui:
                     stopbits=serial.STOPBITS_ONE,
                     timeout=0.5,
                 )
-                self.timer_3.start(100)
+                self.timer_3.start(10)
             except serial.SerialException as e:
                 print(f"Failed to connect to serial port: {str(e)}")
 
@@ -200,7 +200,7 @@ class Main_ui:
                     stopbits=serial.STOPBITS_ONE,
                     timeout=0.5,
                 )
-                self.timer_4.start(100)
+                self.timer_4.start(10)
             except serial.SerialException as e:
                 print(f"Failed to connect to serial port: {str(e)}")
 
@@ -231,7 +231,7 @@ class Main_ui:
     # 显示左右占空比
     def DisplayDuty(self):
         self.timer_5.timeout.connect(self.on_timeout5)
-        self.timer_5.start(100)
+        self.timer_5.start(10)
 
     def on_timeout5(self):
         print(self.data)
