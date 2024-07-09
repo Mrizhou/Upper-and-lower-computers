@@ -1,39 +1,46 @@
-from PyQt6.QtWidgets import QApplication
 import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout
+from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal
+from PyQt6.QtWebChannel import QWebChannel
 from PyQt6 import uic
 import socket
-from PyQt6.QtCore import QTimer, pyqtSignal, QThread
+from PyQt6.QtCore import QTimer, QThread
 import json
 from handle import HandleTask
 from headingholdtask import headingholdtask
 
 
 def angle_string_to_float(angle_string):
-    # 去除角度符号并提取正负号
     sign = 1
     if angle_string[0] in "+-":
         if angle_string[0] == "-":
             sign = -1
         angle_string = angle_string[1:]
 
-    # 提取整数和小数部分
     parts = angle_string[:-1].split(".")
     integer_part = int(parts[0])
     decimal_part = int(parts[1])
-
-    # 组合成浮点数
     angle_float = sign * (integer_part + decimal_part / (10 ** len(parts[1])))
     return angle_float
+
+
+class CoordinateReceiver(QObject):
+    coordinates_received = pyqtSignal(float, float)
+
+    @pyqtSlot(float, float)
+    def receiveCoordinates(self, lat, lng):
+        self.coordinates_received.emit(lat, lng)
 
 
 class Main_ui:
     """
     主窗口初始化
-
     """
 
     def __init__(self):
         self.ui = uic.loadUi("上位机ui.ui")
+        self.initUI()  # 初始化UI组件，包括WebEngineView
         self.ui.show()
         self.data_recv = {
             "Lsend": None,
@@ -56,6 +63,29 @@ class Main_ui:
         self.ui.CONNECT_2.clicked.connect(self.disconnect_lower)
         self.ui.MODEL_3.clicked.connect(self.model_choose)
         self.ui.GEAR_3.clicked.connect(self.gear_choose)
+
+    def initUI(self):
+        # 创建 QWebEngineView 实例
+        self.webView = QWebEngineView()
+        self.webView.setUrl(QUrl("http://127.0.0.1:5000"))
+
+        # 创建 CoordinateReceiver 实例
+        self.coord_receiver = CoordinateReceiver()
+        self.coord_receiver.coordinates_received.connect(self.handle_coordinates)
+
+        # 创建 QWebChannel 并将其与 QWebEngineView 关联
+        self.channel = QWebChannel()
+        self.webView.page().setWebChannel(self.channel)
+        self.channel.registerObject("pywebview", self.coord_receiver)
+
+        # 将 QWebEngineView 添加到 map 容器中
+        layout = QVBoxLayout(self.ui.map)
+        layout.addWidget(self.webView)
+        self.ui.map.setLayout(layout)
+
+    def handle_coordinates(self, lat, lng):
+        print(f"Handling coordinates: Latitude {lat}, Longitude {lng}")
+        # 在这里处理接收到的经纬度信息
 
     def load_socket(self):
         ip = ("", 1207)
@@ -157,7 +187,6 @@ class Main_ui:
 class Receivedata(QThread):
     """
     接受下位机信息
-
     """
 
     data_received = pyqtSignal(object)
