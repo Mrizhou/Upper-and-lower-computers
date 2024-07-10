@@ -224,7 +224,7 @@ class Main_ui:
             "longitude": self.data_recv["longitude"],  # 添加默认值
         }
 
-        # 模型选择
+        # 模式选择
         if self.ui.MODEL_2.currentText() == "遥控":
             self.dov = HandleTask()
             self.dov.data_send.connect(self.task_normal)

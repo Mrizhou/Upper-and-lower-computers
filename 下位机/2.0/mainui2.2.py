@@ -283,8 +283,6 @@ class Receivedata(QThread):
         while self.is_running and not self.lower_socket._closed:
             try:
                 self.recv_data = self.lower_socket.recvfrom(1024)
-                # self.recv_msg = json.loads(self.recv_data[0].decode("utf-8"))
-                # self.address_upper = self.recv_data[1]
                 self.data_received.emit(self.recv_data)  # 触发信号
             except ConnectionResetError as reason:
                 self.is_running = False
