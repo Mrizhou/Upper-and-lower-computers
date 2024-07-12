@@ -7,7 +7,7 @@ from PyQt6 import uic
 import socket
 from PyQt6.QtCore import QTimer, QThread
 import json
-from handle22 import HandleTask
+from handle import HandleTask
 from headingholdtask import headingholdtask
 import logging
 import time
