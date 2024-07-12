@@ -7,7 +7,7 @@ from PyQt6 import uic
 import socket
 from PyQt6.QtCore import QTimer, QThread
 import json
-from handle import HandleTask
+from handle2_1 import HandleTask
 from headingholdtask import headingholdtask
 from pyproj import Proj, Transformer
 import math
