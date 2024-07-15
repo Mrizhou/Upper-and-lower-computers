@@ -13,3 +13,6 @@ mainui2.4(待测试)
 mainui2.5+headingholdtask2_2+index2.html(待测试)
 将Es与期望航向角的计算放到任务文件中，主程序只发送经纬度和罗盘信息
 修复轨迹绘制功能
+
+headingholdtask2_2
+修正航向保持的角度问题
