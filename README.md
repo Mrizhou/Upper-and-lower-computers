@@ -16,3 +16,4 @@ mainui2.5+headingholdtask2_2+index2.html(待测试)
 
 headingholdtask2_3
 修正航向保持的角度问题
+修正Es计算方式
