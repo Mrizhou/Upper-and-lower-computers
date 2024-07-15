@@ -64,9 +64,7 @@ class headingholdtask(QThread):
             self.data["Rsend"], self.data["Lsend"] = [round((x - 1) * scale_factor, 1) for x in ship_control_data[:2]]
 
             # 更新Es
-            current_E = ship.E
-            self.current_data["Es"] = current_E - self.previous_E
-            self.previous_E = current_E  # 更新上一时刻的E
+            self.previous_E = ship.E  # 更新上一时刻的E
 
         self.data_send.emit(self.data)
 
@@ -80,9 +78,7 @@ class headingholdtask(QThread):
         self.data["Lsend"], self.data["Rsend"] = [round(x - 1, 1) for x in ship_control_data[:2]]
 
         # 更新Es
-        current_E = ship.E
-        self.current_data["Es"] = current_E - self.previous_E
-        self.previous_E = current_E  # 更新上一时刻的E
+        self.previous_E = ship.E  # 更新上一时刻的E
 
         self.data_send.emit(self.data)
 
