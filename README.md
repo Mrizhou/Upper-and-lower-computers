@@ -18,3 +18,6 @@ mainui2.5+headingholdtask2_2+index2.html(待测试)<br>
 headingholdtask2_3<br>
 修正航向保持的角度问题<br>
 修正Es计算方式<br>
+
+mainui2.6+headingholdtask2_4+index2.html(待测试，新ui)<br>
+加上了路径跟踪算法<br>
