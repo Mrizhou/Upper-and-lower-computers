@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+
+        #buttons {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .leaflet-container {
+            font-size: 1rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="buttons">
+        <label for="recordTrackSwitch">记录轨迹</label>
+        <input type="checkbox" id="recordTrackSwitch">
+        <label for="markPointSwitch">标记点</label>
+        <input type="checkbox" id="markPointSwitch">
+        <label for="pathTrackingSwitch">路径跟踪</label>
+        <input type="checkbox" id="pathTrackingSwitch">
+        <button id="clearButton" class="btn btn-danger btn-sm">清除所有</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // 初始化地图
+            var map = L.map("map", {
+                center: [30.875193, 121.899973],
+                crs: L.CRS.EPSG3857,
+                zoom: 18,
+                zoomControl: true,
+                preferCanvas: false,
+            });
+
+            // 添加OpenStreetMap图层
+            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "&copy; OpenStreetMap contributors",
+                detectRetina: false,
+                maxNativeZoom: 19,
+                maxZoom: 19,
+                minZoom: 0,
+                noWrap: false,
+                opacity: 1,
+                subdomains: "abc",
+                tms: false
+            }).addTo(map);
+
+            // 初始化标记点和轨迹点数组
+            var markers = [];
+            var trackPoints = [];
+            var pathPoints = []; // 用于路径跟踪的点数组
+            var polyline = L.polyline([], { color: 'green' }).addTo(map); // 初始化一个空的绿色折线
+            var pathPolyline = L.polyline([], { color: 'blue' }).addTo(map); // 初始化一个空的蓝色折线用于路径跟踪
+            var trackMode = false;
+            var markMode = false;
+            var pathMode = false;
+            var currentLocationMarker = null;
+
+            // 记录轨迹开关事件监听
+            document.getElementById("recordTrackSwitch").addEventListener("change", function () {
+                trackMode = this.checked;
+                alert("轨迹记录模式 " + (trackMode ? "已启用" : "已禁用") + ".");
+            });
+
+            // 标记点开关事件监听
+            document.getElementById("markPointSwitch").addEventListener("change", function () {
+                markMode = this.checked;
+                alert("标记点模式 " + (markMode ? "已启用" : "已禁用") + ".");
+            });
+
+            // 路径跟踪开关事件监听
+            document.getElementById("pathTrackingSwitch").addEventListener("change", function () {
+                pathMode = this.checked;
+                alert("路径跟踪模式 " + (pathMode ? "已启用" : "已禁用") + ".");
+            });
+
+            // 地图点击事件监听
+            map.on('click', function (e) {
+                var lat = e.latlng.lat.toFixed(6);
+                var lng = e.latlng.lng.toFixed(6);
+
+                if (markMode) {
+                    var new_mark = L.marker(e.latlng).addTo(map);
+                    new_mark.dragging.enable();
+                    new_mark.bindPopup(`纬度: ${lat}, 经度: ${lng}`).openPopup();
+                    markers.push(new_mark); // 将标记添加到数组中
+                    if (window.pywebview) {
+                        window.pywebview.receiveMarkPoint(parseFloat(lat), parseFloat(lng));
+                    }
+                }
+
+                if (pathMode) {
+                    pathPoints.push([lat, lng]);
+                    pathPolyline.setLatLngs(pathPoints);
+                    if (window.pywebview) {
+                        window.pywebview.updatePath(pathPoints);
+                    }
+                }
+            });
+
+            // 清除按钮事件监听
+            document.getElementById("clearButton").addEventListener("click", function () {
+                markers.forEach(function (marker) {
+                    map.removeLayer(marker);
+                });
+                map.removeLayer(polyline); // 清除折线
+                map.removeLayer(pathPolyline); // 清除路径折线
+                polyline = L.polyline([], { color: 'green' }).addTo(map); // 重新初始化折线
+                pathPolyline = L.polyline([], { color: 'blue' }).addTo(map); // 重新初始化路径折线
+                if (currentLocationMarker) {
+                    map.removeLayer(currentLocationMarker);
+                    currentLocationMarker = null;
+                }
+                markers = []; // 清空标记数组
+                trackPoints = []; // 清空轨迹点数组
+                pathPoints = []; // 清空路径点数组
+                if (window.pywebview) {
+                    window.pywebview.clearAll();
+                }
+            });
+
+            // 初始化QWebChannel
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                window.pywebview = channel.objects.pywebview;
+
+                // 更新轨迹函数
+                window.pywebview.updateTrack = function (lat, lng) {
+                    if (trackMode) {
+                        trackPoints.push([lat, lng]);
+                        polyline.setLatLngs(trackPoints);
+                        console.log("轨迹更新:", trackPoints);
+                    }
+                };
+
+                // 更新当前位置函数
+                window.pywebview.updateCurrentLocation = function (lat, lng) {
+                    if (currentLocationMarker) {
+                        map.removeLayer(currentLocationMarker);
+                    }
+                    currentLocationMarker = L.marker([lat, lng], {
+                        icon: L.divIcon({
+                            className: 'current-location-icon',
+                            html: '<i class="fa fa-map-marker" style="color: red;"></i>',
+                            iconSize: [20, 20],
+                            iconAnchor: [3, 9]  // 调整以使图标居中
+                        })
+                    }).addTo(map);
+                    map.setView([lat, lng], map.getZoom());
+
+                    // 如果轨迹记录模式已启用，也将点添加到轨迹中
+                    if (trackMode) {
+                        window.pywebview.updateTrack(lat, lng);
+                    }
+                };
+
+                // 更新路径跟踪点函数
+                window.pywebview.updatePath = function (points) {
+                    pathPoints = points;
+                    pathPolyline.setLatLngs(pathPoints);
+                };
+            });
+        });
+
+    </script>
+</body>
+
+</html>
