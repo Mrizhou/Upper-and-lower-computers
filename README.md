@@ -24,3 +24,7 @@ mainui2.6+headingholdtask2_4+index2.html(待测试，新ui)<br>
 
 mainui2.7+index3.html(待测试)<br>
 优化路径跟踪模式，能够通过选点自动填充
+
+### 下位机
+mainui2.3
+超过3s接收不到上位机信息把占空比改为7.5

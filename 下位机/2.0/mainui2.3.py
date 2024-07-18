@@ -12,7 +12,6 @@ import time
 class Main_ui:
     """
     主窗口初始化
-
     """
 
     def __init__(self):
@@ -29,6 +28,7 @@ class Main_ui:
         self.load_socket()
         self.recv = Receivedata(self.lower_socket)
         self.recv.data_received.connect(self.handle_data)
+        self.recv.timeout.connect(self.handle_timeout)  # 连接超时信号到处理函数
         self.ser_1 = None
         self.ser_2 = None
         self.ser_3 = None
@@ -85,6 +85,12 @@ class Main_ui:
         address_upper = data[1]
         self.ip_upper = address_upper[0]
         self.port = address_upper[1]
+        self.recv.reset_timeout()  # 重置超时计时器
+
+    def handle_timeout(self):
+        self.data["Rsend"] = 7.5
+        self.data["Lsend"] = 7.5
+        print("3秒未接收到上位机数据，发送值已重置为7.5")
 
     def connect_com1(self):
         self.timer_1.stop()
@@ -234,9 +240,6 @@ class Main_ui:
         self.timer_5.start(10)
 
     def on_timeout5(self):
-        print(self.data)
-        # self.ui.Lsend_2.setText("7.5")
-        # self.ui.Rsend_2.setText("7.5")
         try:
             self.ui.Lsend_2.setText(str(self.data["Lsend"]))
             self.ui.Rsend_2.setText(str(self.data["Rsend"]))
@@ -263,16 +266,20 @@ class Main_ui:
 class Receivedata(QThread):
     """
     接受上位机信息
-
     """
 
     data_received = pyqtSignal(object)
+    timeout = pyqtSignal()  # 定义超时信号
 
     def __init__(self, lower_socket):
         super().__init__()
         self.lower_socket = lower_socket
         self.is_running = True
         self.recv_data = None
+        self.last_received_time = time.time()
+        self.timeout_timer = QTimer()
+        self.timeout_timer.timeout.connect(self.check_timeout)
+        self.timeout_timer.start(1000)
 
     def run(self):
         self.startReceiveData()
@@ -282,14 +289,23 @@ class Receivedata(QThread):
             try:
                 self.recv_data = self.lower_socket.recvfrom(1024)
                 self.data_received.emit(self.recv_data)  # 触发信号
+                self.last_received_time = time.time()  # 更新最后接收数据的时间
             except ConnectionResetError as reason:
                 self.is_running = False
                 break
             except OSError as e:
                 print(e)
 
+    def check_timeout(self):
+        if time.time() - self.last_received_time > 3:
+            self.timeout.emit()  # 触发超时信号
+
+    def reset_timeout(self):
+        self.last_received_time = time.time()
+
     def stop(self):
         self.is_running = False
+        self.timeout_timer.stop()
 
 
 if __name__ == "__main__":
