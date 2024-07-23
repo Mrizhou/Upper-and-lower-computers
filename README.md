@@ -23,7 +23,10 @@ mainui2.6+headingholdtask2_4+index2.html(待测试，新ui)<br>
 加上了路径跟踪算法<br>
 
 mainui2.7+index3.html(待测试)<br>
-优化路径跟踪模式，能够通过选点自动填充
+优化路径跟踪模式，能够通过选点自动填充<br>
+
+mainui2.8+新ui<br>
+加了输入模式，能根据输入的值控制电机<br>
 
 ### 下位机
 mainui2.3
