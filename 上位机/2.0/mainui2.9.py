@@ -337,12 +337,8 @@ class MainUI:
 
     def task_normal(self, data):
         """处理正常任务数据。"""
-        if "Rsend" in data and "Lsend" in data:
-            self.data_send["Rsend"] = data["Rsend"] * self.gear + 7.5
-            self.data_send["Lsend"] = data["Lsend"] * self.gear + 7.5
-            self.logger.info(f"task_normal - updated data_send: {self.data_send}")
-        else:
-            self.logger.warning("task_normal - received invalid data")
+        self.data_send["Rsend"] = data["Rsend"] * self.gear + 7.5
+        self.data_send["Lsend"] = data["Lsend"] * self.gear + 7.5
 
     def __del__(self):
         """析构函数以释放资源。"""
