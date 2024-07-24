@@ -19,14 +19,17 @@ headingholdtask2_3<br>
 修正航向保持的角度问题<br>
 修正Es计算方式<br>
 
-mainui2.6+headingholdtask2_4+index2.html(待测试，新ui)<br>
+mainui2.6+headingholdtask2_4+index2.html<br>
 加上了路径跟踪算法<br>
 
-mainui2.7+index3.html(待测试)<br>
+mainui2.7+index3.html<br>
 优化路径跟踪模式，能够通过选点自动填充<br>
 
 mainui2.8+新ui<br>
 加了输入模式，能根据输入的值控制电机<br>
+
+mainui2.9<br>
+修复了遥控模式切换到其他模式后出现Lsend和Rsend异常的bug<br>
 
 ### 下位机
 mainui2.3
