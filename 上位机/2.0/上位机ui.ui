@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>727</width>
-    <height>796</height>
+    <width>726</width>
+    <height>810</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -82,7 +82,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>60.215.128.73</string>
+       <string>101.70.156.105</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="PORT_2">
@@ -95,7 +95,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>55274</string>
+       <string>23707</string>
       </property>
      </widget>
      <widget class="QPushButton" name="CONNECT">
@@ -319,13 +319,13 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>210</y>
+     <y>280</y>
      <width>691</width>
-     <height>541</height>
+     <height>521</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -439,8 +439,8 @@
   <widget class="QLineEdit" name="Lsend_4">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>140</y>
+     <x>70</x>
+     <y>200</y>
      <width>113</width>
      <height>20</height>
     </rect>
@@ -449,8 +449,8 @@
   <widget class="QLineEdit" name="Rsend_4">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>140</y>
+     <x>240</x>
+     <y>200</y>
      <width>113</width>
      <height>20</height>
     </rect>
@@ -459,8 +459,8 @@
   <widget class="QLabel" name="Lsend_3">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>140</y>
+     <x>20</x>
+     <y>200</y>
      <width>36</width>
      <height>20</height>
     </rect>
@@ -475,8 +475,8 @@
   <widget class="QLabel" name="Rsend_3">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>140</y>
+     <x>180</x>
+     <y>200</y>
      <width>36</width>
      <height>20</height>
     </rect>
@@ -487,6 +487,32 @@
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
+  </widget>
+  <widget class="QTableWidget" name="GPS_task">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>140</y>
+     <width>211</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <column>
+    <property name="text">
+     <string>经度</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>纬度</string>
+    </property>
+   </column>
   </widget>
  </widget>
  <resources/>

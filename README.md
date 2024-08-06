@@ -31,6 +31,12 @@ mainui2.8+新ui<br>
 mainui2.9<br>
 修复了遥控模式切换到其他模式后出现Lsend和Rsend异常的bug<br>
 
+mainui2.10++headingholdtask2_5+新ui<br>
+路径跟踪模式增加为多点路径跟踪，到终点时会停下来
+路径跟踪到终点后增加了返程选项
+优化了udp传输过程中的问题
+
+
 ### 下位机
 mainui2.3
 超过3s接收不到上位机信息把占空比改为7.5
