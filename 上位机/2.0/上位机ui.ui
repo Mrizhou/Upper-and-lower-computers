@@ -221,6 +221,11 @@
           <string>路径跟踪</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>路径跟踪2</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="0" column="2">
