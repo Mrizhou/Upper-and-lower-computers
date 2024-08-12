@@ -31,13 +31,18 @@ mainui2.8+新ui<br>
 mainui2.9<br>
 修复了遥控模式切换到其他模式后出现Lsend和Rsend异常的bug<br>
 
-mainui2.10++headingholdtask2_5+新ui<br>
+mainui2.10+headingholdtask2_5+新ui<br>
 路径跟踪模式增加为多点路径跟踪，到终点时会停下来<br>
 路径跟踪到终点后增加了返程选项<br>
 优化了udp传输过程中的问题<br>
 
 mainui2.11<br>
 路径跟踪2 读取之前保存的点作为路径跟踪点
+
+mainui2.12+headingholdtask2_6<br>
+修复了遥控模式下把标记点记录在文本中会打开新文件的错误<br>
+新电机7.4中值 4.9-9.8
+优化左右电机值计算方式，使船有更好的转弯性能
 
 ### 下位机
 mainui2.3
