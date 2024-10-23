@@ -1,5 +1,5 @@
 # Upper and lower computers
-## 上下位机
+## 上下位机2
 
 
 ### 上位机
@@ -47,3 +47,11 @@ mainui2.12+headingholdtask2_6<br>
 ### 下位机
 mainui2.3
 超过3s接收不到上位机信息把占空比改为7.5
+
+## 上下位机3
+
+将控制运算部分放在下位机，上位机仅作为任务发送和显示实时数据
+
+### 上位机
+main上3.1.py+KeyboradControl+handle22<br>
+加入了键盘模式，可通过wasd和上下左右进行遥控
