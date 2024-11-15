@@ -37,7 +37,7 @@ class KeyboardControlTask(QThread):
             clock.tick(10)
 
     def on_update_data(self, new_data):
-        self.speed_step = 0.1 * new_data
+        self.speed_step = round(0.1 * new_data, 1)
 
     def handle_key_events(self, keys):
         # 前进和后退控制
@@ -55,6 +55,10 @@ class KeyboardControlTask(QThread):
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.l_do = max(self.l_do - self.speed_step, self.max_speed)
             self.r_do = min(self.r_do + self.speed_step, self.min_speed)
+
+        if keys[pygame.K_p]:
+            self.l_do = 0
+            self.r_do = 0
 
     def stop(self):
         self.is_running = False

@@ -95,7 +95,13 @@ class MainUI:
             "mark_longitude": 0.0,
             "mark_compass": 0.0,
             "mode": None,
-            "path_points": [],
+            "path_points": [
+                [121.899800, 30.876895],
+                [121.900178, 30.876410],
+                [121.900387, 30.876594],
+                [121.899985, 30.876934],
+                [121.899800, 30.876895],
+            ],
             "gear": 1,
             "track_num": 0,
         }
@@ -187,6 +193,13 @@ class MainUI:
     def on_timeout1(self):
         # 定时更新显示数据并发送数据
         self.updateDisplayData()
+        if hasattr(self, "dov") and self.dov:
+            data_send = json.dumps(self.data_send)
+            if not self.ui.CONNECT.isEnabled():
+                try:
+                    self.upper_socket.sendto(data_send.encode("utf-8"), (self.ip_lower, self.port))
+                except Exception as e:
+                    print(f"发送数据时出错：{e}")
 
     def updateDisplayData(self):
         # 更新用户界面显示的数据
